@@ -1,9 +1,22 @@
+
+
+currentPlayer = true;
+choice = {x:0,y:0};
+game = [ [0,0,0],[0,0,0],[0,0,0] ];
+word_index = {zero:0,one:1,two:2};
+index_word = {0:'zero',1:'one',2:'two'};
+
+
 $(document).ready(function() {
 
-  var currentPlayer = true;
   $(".cell").click(function() {
+    console.log("game",game);
     var player = currentPlayer ? "X" : "O";
     selectElement( $(this), player);
+    var index = getIndex( $(this) );
+    // console.log("index",index);
+    currentPlayer ? game[index.i][index.j] = 1 : game[index.i][index.j] = -1;
+    // console.log("index",index);
     var won = hasWon(currentPlayer);
     if (won) {
       $(".cell").html("");
@@ -28,7 +41,7 @@ function matchDraw() {
 
   var count = 0;
   $(".cell").each(function (index,element) {
-    console.log(count,element);
+    // console.log(count,element);
     var text = getText($(this));
     if (text)
       count +=1;
@@ -80,6 +93,19 @@ function hasWon(currentPlayer) {
     }
   }
   return row || column || diagonal || off_diagonal;
+}
+
+function getIndex(element) {
+      var item = element.attr("class").split(" ")[1].split("-");
+      return { i:word_index[item[0]],j:word_index[item[1]] };
+}
+
+function indexToClass(index) {
+      return "." + index_word[index[i]] + "-" + index_word[index[j]];
+}
+
+function getpossibleMoves() {
+
 }
 
 function getText(element) {
